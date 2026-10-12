@@ -34,6 +34,52 @@
 <section class="card reveal" id="personal-info"><div class="section-top"><span class="icon" aria-hidden="true">◎</span><h2 data-i18n="personalTitle">Personal Information</h2></div><ul class="details"><li><span data-i18n="birthdayLabel">Birthday</span><strong><bdi>18/09/1997</bdi></strong></li><li><span data-i18n="genderLabel">Gender</span><strong data-i18n="male">Male</strong></li><li><span data-i18n="nationalityLabel">Nationality</span><strong data-i18n="syrian">Syrian</strong></li><li><span data-i18n="residenceLabel">Current residence</span><strong data-i18n="russia">Russia</strong></li></ul></section>
 <section class="card wide reveal" id="languages"><div class="section-top"><span class="icon" aria-hidden="true">文</span><h2 data-i18n="languagesTitle">Languages</h2></div><div class="language-row"><span data-i18n="arabic">Arabic</span><span data-i18n="native">Native</span></div><div class="language-row"><span data-i18n="russian">Russian</span><span data-i18n="excellent">Excellent</span></div><div class="language-row"><span data-i18n="english">English</span><span data-i18n="veryGood">Very good</span></div></section>
 </div></main><footer><span>© <span id="year">2026</span> <span data-i18n="name">Tareq Zn</span></span><a href="#top" data-i18n="backTop">Back to top ↑</a></footer>
+<script id="owner-integrity-guard">
+/* Client-side ownership check. This is a deterrent, not encryption or copy prevention. */
+(function () {
+  'use strict';
+  const originalURL = 'https://tareqzn.github.io/my-site/';
+  const ownerNames = Object.freeze({en: 'Tareq Zn', ar: 'طارق زين', ru: 'Тарек Зейн'});
+  const selectors = ['.brand', '.loader-logo', '.hero h1', 'footer [data-i18n="name"]'];
+  const normalize = value => String(value).normalize('NFC').trim().replace(/\s+/g, ' ').toLocaleUpperCase();
+  let redirectPending = false;
+  function redirect() {
+    if (redirectPending) return;
+    redirectPending = true;
+    window.setTimeout(function () { window.location.replace(originalURL); }, 600);
+  }
+  function validNames() {
+    const lang = document.documentElement.lang;
+    if (!Object.prototype.hasOwnProperty.call(ownerNames, lang)) return false;
+    const expected = normalize(ownerNames[lang]);
+    for (const selector of selectors) {
+      const element = document.querySelector(selector);
+      if (!element || element.getAttribute('data-i18n') !== 'name' || normalize(element.textContent) !== expected) return false;
+    }
+    const codeName = document.querySelector('.code-art pre .green');
+    if (!codeName || normalize(codeName.textContent) !== normalize('"Tareq Zn"')) return false;
+    return true;
+  }
+  function check() {
+    if (!validNames()) { redirect(); return; }
+    // Also catch edits to the translation table, including an inactive language.
+    // The table is initialized by the following application script.
+    if (typeof translations !== 'undefined') {
+      for (const lang of Object.keys(ownerNames)) {
+        if (!translations[lang] || normalize(translations[lang].name) !== normalize(ownerNames[lang])) { redirect(); return; }
+      }
+    }
+  }
+  // Check the original HTML before the language script can replace its text.
+  if (!validNames()) redirect();
+  const observer = new MutationObserver(check);
+  observer.observe(document.body, {subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['data-i18n', 'class']});
+  observer.observe(document.documentElement, {attributes: true, attributeFilter: ['lang']});
+  // Fallback catches translation-table edits that produce no DOM mutation.
+  window.setInterval(check, 250);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) check(); });
+}());
+</script>
 <script>
 const translations={
 en:{social_whatsapp:'WhatsApp',social_instagram:'Instagram',social_vk:'VK',social_telegram:'Telegram',social_email:'Personal email',social_facebook:'Facebook',social_linkedin:'LinkedIn',social_max:'MAX',notLinked:'Account link pending',title:'Tareq Zn — Programmer CV',loading:'Loading portfolio…',eyebrow:'PROGRAMMING · TECHNOLOGY · IDEAS',name:'Tareq Zn',role:'IT Graduate · Master’s Student',intro:'A passion for technology, a curiosity for data, and a drive to build thoughtful digital experiences.',explore:'Explore my project',getInTouch:'Get in touch',aboutTitle:'About Me',about:'Highly motivated and experienced IT professional with a strong background in software development, data analysis, and project management. Proficient in a range of programming languages, including Python, Java, and C++. Proven track record of delivering high-quality projects on time and on budget.',skillsTitle:'Skills',programming:'Programming languages',databases:'Databases',systems:'Operating systems',educationTitle:'Education',degree:'Bachelor’s Degree in Information Systems and Technologies',university:'Kuban State University',graduation:'Graduated in 2025',completed:'Completed',studying:'Currently studying',masters:'Master’s in Infocommunication Technologies and Communication Systems',masterNote:'Continuing my studies in a different specialty at the same university.',masterGraduation:'Expected graduation: 2027',addressLabel:'University address',address:'149 Stavropolskaya Street, Krasnodar, Krasnodar Krai, 350040',projectsTitle:'Projects',projectName:'My Site',projectDescription:'A blog dedicated to everything related to anime, games, Android, and personal computer maintenance.',viewSite:'View site',contactTitle:'Contact',email:'Email',phone:'Phone',instagram:'Instagram',personalTitle:'Personal Information',birthdayLabel:'Birthday',genderLabel:'Gender',male:'Male',nationalityLabel:'Nationality',syrian:'Syrian',residenceLabel:'Current residence',russia:'Russia',languagesTitle:'Languages',arabic:'Arabic',russian:'Russian',english:'English',native:'Native',excellent:'Excellent',veryGood:'Very good',backTop:'Back to top ↑',languageNav:'Language selection',chooseLanguage:'Choose language'},
